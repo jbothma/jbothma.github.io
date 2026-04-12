@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
@@ -15,6 +17,11 @@ export default function Home() {
           </p>
           <p>
             My broader social interest is a sustainable and equitable economic and political system that tends toward enabling people to live the lives they want as comfortably and sustainably as the environment can allow, and makes it difficult for self-interest to take that away from others.
+          </p>
+          <p>
+            <Link className="underline hover:no-underline" href="/blog">
+              Read the blog →
+            </Link>
           </p>
         </div>
       </main>

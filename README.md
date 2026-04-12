@@ -29,6 +29,19 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Blog markdown map embeds
+
+Blog posts live in `content/posts/*.md` and support raw HTML plus a custom GPX map directive.
+
+Use this in a post:
+
+`::gpx-map{src="/routes/your-route.gpx" height="460"}`
+
+- `src` is required and should point to a GPX file under `public/`.
+- `height` is optional (defaults to `420` pixels).
+
+The `::gpx-map` directive is rendered as a React component (using `react-markdown` + `react-leaflet`), so no per-post script tags are required.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
