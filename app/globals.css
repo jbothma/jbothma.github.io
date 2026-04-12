@@ -65,6 +65,29 @@ body {
   background: color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 
+/* Make links in posts look like traditional hyperlinks */
+.post-content a {
+  color: #2563eb; /* blue-600 */
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .post-content a {
+    color: #93c5fd; /* blue-300 for dark background */
+  }
+}
+
+/* Stronger specificity for environments where utility classes or other rules
+   might override link color. Use visited & hover states too. */
+.post-content a,
+.post-content a:visited {
+  color: #2563eb !important;
+}
+
+.post-content a:hover {
+  color: #1e40af !important; /* blue-800 */
+}
+
 .gpx-map {
   min-height: 320px;
   border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);

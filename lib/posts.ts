@@ -19,42 +19,64 @@ function ensureString(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
 }
 
-export async function getPostSlugs(): Promise<string[]> {
-  const files = await fs.readdir(postsDirectory);
-  return files.filter((file) => file.endsWith(".md")).map((file) => file.replace(/\.md$/, ""));
+function dateFromFrontMatter(value: unknown, fallback = ""): string {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+
+  return ensureString(value, fallback);
 }
 
-export async function getAllPosts(): Promise<PostSummary[]> {
-  const slugs = await getPostSlugs();
-
-  const posts = await Promise.all(
-    slugs.map(async (slug) => {
-      const fullPath = path.join(postsDirectory, `${slug}.md`);
-      const fileContents = await fs.readFile(fullPath, "utf8");
-      const { data } = matter(fileContents);
-
-      return {
-        slug,
-        title: ensureString(data.title, slug),
-        date: ensureString(data.date, "1970-01-01"),
-        excerpt: ensureString(data.excerpt),
-      } satisfies PostSummary;
-    }),
-  );
-
-  return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
+function isDatedMarkdownFile(fileName: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}-.+\.md$/.test(fileName);
 }
 
-export async function getPostBySlug(slug: string): Promise<Post> {
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
+async function getDatedFileSlugs(): Promise<string[]> {
+  return (await fs.readdir(postsDirectory))
+    .filter((file) => isDatedMarkdownFile(file))
+    .map((file) => file.replace(/\.md$/, ""));
+}
+
+async function readPostFromFileSlug(fileSlug: string): Promise<Post> {
+  const fullPath = path.join(postsDirectory, `${fileSlug}.md`);
   const fileContents = await fs.readFile(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
   return {
-    slug,
-    title: ensureString(data.title, slug),
-    date: ensureString(data.date, "1970-01-01"),
+    slug: fileSlug,
+    title: ensureString(data.title, fileSlug),
+    date: dateFromFrontMatter(data.date),
     excerpt: ensureString(data.excerpt),
     content,
   };
+}
+
+export async function getPostSlugs(): Promise<string[]> {
+  const fileSlugs = await getDatedFileSlugs();
+
+  const posts = await Promise.all(fileSlugs.map((fileSlug) => readPostFromFileSlug(fileSlug)));
+  return posts.map((post) => post.slug);
+}
+
+export async function getAllPosts(): Promise<PostSummary[]> {
+  const fileSlugs = await getDatedFileSlugs();
+
+  const posts = await Promise.all(
+    fileSlugs.map(async (fileSlug) => {
+      const post = await readPostFromFileSlug(fileSlug);
+
+      return {
+        slug: post.slug,
+        title: post.title,
+        date: post.date,
+        excerpt: post.excerpt,
+      } satisfies PostSummary;
+    }),
+  );
+
+  return posts.sort((a, b) => (a.slug < b.slug ? 1 : -1));
+}
+
+export async function getPostBySlug(slug: string): Promise<Post> {
+  return readPostFromFileSlug(slug);
 }
