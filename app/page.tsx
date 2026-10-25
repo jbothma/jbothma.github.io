@@ -6,11 +6,11 @@ export default function Home() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start max-w-2xl">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-center sm:text-left">JD Bothma</h1>
         <p className="text-lg sm:text-xl text-center sm:text-left mb-6">
-          Hi, I'm JD Bothma, a software developer with a passion for building systems that enable everyone to live comfortably.
+          Hi, I'm JD Bothma, a software engineer and technical product developer with a passion for building systems that enable everyone to live comfortably.
         </p>
         <div className="flex flex-col gap-4 text-base sm:text-lg text-center sm:text-left">
           <p>
-            My experience ranges from large scale <span className="font-semibold">Erlang</span> systems, to <span className="font-semibold">Python</span> data processing and ETL, and a lot of <span className="font-semibold">civic technology</span> projects.
+            My strongest experience is in <span className="font-semibold">product design and software engineering</span> of civic tech like <span className="font-semibold">budget data visualisation with supporting contextual information</span>. But I generally enjoy myself working on things that get data where it's needed, in the shape needed, and making it meaningful. I'm also excited by the <span className="font-semibold">data extraction enabled by LLMs</span> and how to do that robustly.
           </p>
           <p>
             I enjoy making data useful and make sense, and contributing to positive change.
